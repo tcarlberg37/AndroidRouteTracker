@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">MobileAppsProject</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="my_movement">MY MOVEMENT</string>
+    <string name="home">HOME</string>
+    <string name="ready_to_get_moving">Ready to Get Moving?</string>
+
+</resources>
