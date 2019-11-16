@@ -38,58 +38,23 @@
         app:layout_constraintVertical_bias="0.049" />
 
     <Button
-        android:id="@+id/btnRoute1"
-        android:layout_width="233dp"
-        android:layout_height="60dp"
-        android:text="Route 1: Walk to Work"
-        app:layout_constraintBottom_toTopOf="@+id/btnRoute2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
-
-    <Button
-        android:id="@+id/btnRoute2"
-        android:layout_width="226dp"
-        android:layout_height="62dp"
-        android:text="Route 2: Walk to GBC"
-        app:layout_constraintBottom_toTopOf="@+id/btnRoute3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.518"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8"
-        app:layout_constraintVertical_bias="0.736" />
-
-    <Button
-        android:id="@+id/btnRoute3"
-        android:layout_width="230dp"
-        android:layout_height="57dp"
-        android:text="Route 3: Bike from GBC to Home"
-        app:layout_constraintBottom_toTopOf="@+id/btnRoute4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.508"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8"
-        app:layout_constraintVertical_bias="0.853" />
-
-    <Button
-        android:id="@+id/btnRoute4"
-        android:layout_width="240dp"
-        android:layout_height="58dp"
-        android:text="Route 4: Drive to GBC"
-        app:layout_constraintBottom_toTopOf="@+id/btnHomePage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.479"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8"
-        app:layout_constraintVertical_bias="0.811" />
-
-    <Button
-        android:id="@+id/btnHomePage"
+        android:id="@+id/btnStart"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-        android:text="Home Page"
+        android:text="Start New Route"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <fragment
+        android:id="@+id/fragment"
+        android:name="com.example.mobileappsproject.RouteFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/btnStart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8"
+        tools:layout="@layout/fragment_route_list" />
 </androidx.constraintlayout.widget.ConstraintLayout>

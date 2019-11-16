@@ -21,7 +21,7 @@ public class MainActivity extends FragmentActivity implements MapFragment.OnFrag
         Toolbar toolbar = findViewById(R.id.toolbar);
         // setSupportActionBar(toolbar);
 
-        Button btnNewRoute = findViewById(R.id.btnHomePage);
+        Button btnNewRoute = findViewById(R.id.btnStart);
         Button btnAboutUs = findViewById(R.id.btnAboutUs);
         Button btnListRoutes = findViewById(R.id.btnListRoutes);
 

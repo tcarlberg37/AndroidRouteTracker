@@ -4,12 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.example.mobileappsproject.Route.RouteContent;
 
 public class EditRouteInfoActivity extends FragmentActivity implements MapFragment.OnFragmentInteractionListener {
 
@@ -17,29 +21,44 @@ public class EditRouteInfoActivity extends FragmentActivity implements MapFragme
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_route_info);
+        final RouteDbHelper dbHelper = new RouteDbHelper(this);
 
-        Bundle route_info = getIntent().getExtras();
-        String route_name = route_info.getString("route_name");
-        String tags = route_info.getString("tags");
-        String date = route_info.getString("date");
+        // if route was passed in intent set it = route, else null
+        final RouteContent.Route route = getIntent().getExtras() == null ? null : (RouteContent.Route)getIntent().getExtras().getSerializable("route");
 
-        TextView txtRouteName = findViewById(R.id.txtRouteName);
-        EditText editRouteName = findViewById(R.id.editRouteName);
-        EditText editTags = findViewById(R.id.editTags);
-        EditText editDate = findViewById(R.id.editDate);
+        final TextView txtRouteName = findViewById(R.id.txtRouteName);
+        final EditText editRouteName = findViewById(R.id.editRouteName);
+        final EditText editTags = findViewById(R.id.editTags);
+        final EditText editDate = findViewById(R.id.editDate);
+        final RatingBar ratingBar = findViewById(R.id.ratingBar);
 
-        txtRouteName.setText(route_name);
-        editRouteName.setText(route_name);
-        editTags.setText(tags);
-        editDate.setText(date);
+        if (route != null){
+            txtRouteName.setText(route.route_name);
+            editRouteName.setText(route.route_name);
+            editTags.setText(route.tags);
+            editDate.setText(route.date);
+            ratingBar.setRating(route.rating);
+        }
+
 
         Button btnSave = findViewById(R.id.btnSave);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // redirect back to the home page once the edits are saved
-                Intent i = new Intent(v.getContext(), MainActivity.class);
+                String old_name = txtRouteName.getText().toString();
+                String new_name = editRouteName.getText().toString();
+                float rating = ratingBar.getRating();
+                String tags = editTags.getText().toString();
+                String date = editDate.getText().toString();
+                if (route != null){ // if the route exists already, update
+                    dbHelper.updateRoute(old_name, new_name, rating, tags, date);
+                } else { // if route doesn't exist, insert new row
+                    dbHelper.insert(new_name, rating, tags, date);
+                }
+                // redirect back to the list page once the edits are saved
+                Intent i = new Intent(v.getContext(), RouteListActivity.class);
                 startActivity(i);
+                finish();
             }
         });
     }

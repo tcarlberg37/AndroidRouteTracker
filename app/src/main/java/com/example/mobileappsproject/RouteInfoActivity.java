@@ -9,7 +9,10 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.example.mobileappsproject.Route.RouteContent;
 
 public class RouteInfoActivity extends FragmentActivity implements MapFragment.OnFragmentInteractionListener {
 
@@ -18,24 +21,26 @@ public class RouteInfoActivity extends FragmentActivity implements MapFragment.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_info);
 
-        // set the title of the page to the name of the route they clicked on in the Route List
-        final String route_name = getIntent().getExtras().getString("route_name");
+        final RouteContent.Route route = getIntent().getExtras() == null ? null : (RouteContent.Route)getIntent().getExtras().getSerializable("route");
         TextView txtRouteName = findViewById(R.id.txtRouteName);
-        txtRouteName.setText(route_name);
-
         final TextView txtTags = findViewById(R.id.txtTags);
         final TextView txtDate = findViewById(R.id.txtDate);
+        final RatingBar ratingBar = findViewById(R.id.ratingBar);
+
+        if (route != null){
+            txtRouteName.setText(route.route_name);
+            txtTags.setText(route.tags);
+            txtDate.setText(route.date);
+            ratingBar.setRating(route.rating);
+        }
+
         Button btnEditRoute = findViewById(R.id.btnEditRoute);
 
         btnEditRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(v.getContext(), EditRouteInfoActivity.class);
-                Bundle infoBundle = new Bundle();
-                infoBundle.putString("route_name", route_name);
-                infoBundle.putString("tags", txtTags.getText().toString());
-                infoBundle.putString("date", txtDate.getText().toString());
-                i.putExtras(infoBundle); // pass the bundle of key-value pairs to the intent for the edit route page
+                i.putExtra("route", route);
                 startActivity(i);
             }
         });
