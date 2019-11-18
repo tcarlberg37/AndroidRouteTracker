@@ -57,6 +57,21 @@ public class EditRouteInfoActivity extends FragmentActivity implements MapFragme
                 }
                 // redirect back to the list page once the edits are saved
                 Intent i = new Intent(v.getContext(), RouteListActivity.class);
+                // i.putExtra("reload", true);
+                setResult(1);
+                startActivity(i);
+                finish();
+            }
+        });
+
+        Button btnDelete = findViewById(R.id.btnDelete);
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dbHelper.deleteRoute(route.route_name); // 1 if row deleted, 0 if not
+                Intent i = new Intent(v.getContext(), RouteListActivity.class);
+                // i.putExtra("reload", true);
+                setResult(1);
                 startActivity(i);
                 finish();
             }

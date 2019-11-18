@@ -105,4 +105,10 @@ public class RouteFragment extends Fragment {
         // TODO: Update argument type and name
         void onListFragmentInteraction(RouteContent.Route item);
     }
+
+    // recycle view once data has been changed
+    public void updateView() {
+        RecyclerView rv = getActivity().findViewById(R.id.fragmentList);
+        rv.getAdapter().notifyDataSetChanged();
+    }
 }

@@ -13,14 +13,19 @@ import java.util.Map;
 
 public class RouteContent {
 
-    public static final List<Route> ROUTES = new ArrayList<Route>();
+    public static List<Route> ROUTES = new ArrayList<Route>();
 
-    public static final Map<Long, Route> ITEM_MAP = new HashMap<Long, Route>();
+    public static Map<Long, Route> ITEM_MAP = new HashMap<Long, Route>();
 
 
     private static void addRoute(Route route) {
         ROUTES.add(route);
         ITEM_MAP.put(route.id, route);
+    }
+
+    public static void resetRoutes() {
+        ROUTES = new ArrayList<Route>();
+        ITEM_MAP = new HashMap<Long, Route>();
     }
 
     public static class Route implements Serializable {

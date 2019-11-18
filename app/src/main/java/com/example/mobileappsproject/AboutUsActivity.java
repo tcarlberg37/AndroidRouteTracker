@@ -18,7 +18,7 @@ public class AboutUsActivity extends AppCompatActivity {
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(v.getContext(), MainActivity.class);
+                Intent i = new Intent(v.getContext(), RouteListActivity.class);
                 startActivity(i);
             }
         });
