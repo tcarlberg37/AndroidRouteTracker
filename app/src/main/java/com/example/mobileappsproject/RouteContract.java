@@ -15,7 +15,7 @@ public class RouteContract {
 
         public static final String SQL_CREATE = "CREATE TABLE " + TABLE_NAME + " ( " +
                 _ID + " INTEGER PRIMARY KEY, " + COLUMN_ROUTE_NAME + " TEXT, "
-                + COLUMN_RATING + " FLOAT, " + COLUMN_TAGS + " TEXT, " + COLUMN_DATE + " TEXT )";
+                + COLUMN_RATING + " NUMBER, " + COLUMN_TAGS + " TEXT, " + COLUMN_DATE + " TEXT )";
 
         public static final String SQL_DROP = "DROP TABLE IF EXISTS " + TABLE_NAME;
     }

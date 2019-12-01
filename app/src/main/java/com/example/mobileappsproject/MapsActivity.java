@@ -3,6 +3,7 @@ package com.example.mobileappsproject;
 import androidx.fragment.app.FragmentActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -38,6 +39,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        Log.d("message", "MapsActivity onMapReady launched");
 
         LatLng gbc = new LatLng(43.6775069,-79.4121207); // Coordinates of GBC
         mMap.addMarker(new MarkerOptions().position(gbc).title("George Brown College"));

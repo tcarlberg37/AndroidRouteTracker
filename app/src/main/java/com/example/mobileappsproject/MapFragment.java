@@ -1,19 +1,28 @@
 package com.example.mobileappsproject;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
@@ -31,6 +40,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         SupportMapFragment mapFragment = (SupportMapFragment) manager.findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         return view;
+    }
+
+    public void getMap(Context context){
+        FragmentManager manager = getChildFragmentManager();
+        SupportMapFragment mapFragment = (SupportMapFragment) manager.findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -60,6 +75,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
+        GoogleMap mMap = googleMap;
+        LatLng gbc = new LatLng(43.6775069,-79.4121207); // Coordinates of GBC
+        mMap.addMarker(new MarkerOptions().position(gbc).title("George Brown College"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(gbc, 16)); // zoom level goes from 2.0 to 21.0
+
+        Log.d("message", "MapFragment onMapReady launched");
     }
 
     /*

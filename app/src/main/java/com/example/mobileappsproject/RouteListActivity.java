@@ -56,7 +56,7 @@ public class RouteListActivity extends FragmentActivity implements RouteFragment
 
     @Override
     public void onListFragmentInteraction(RouteContent.Route item) {
-        Intent i = new Intent(this, RouteInfoActivity.class);
+        Intent i = new Intent(this, EditRouteInfoActivity.class);
         i.putExtra("route", item);
         //startActivity(i);
         startActivityForResult(i, 1);
@@ -72,5 +72,13 @@ public class RouteListActivity extends FragmentActivity implements RouteFragment
                 fragment.updateView();
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FragmentManager manager = getSupportFragmentManager();
+        RouteFragment fragment = (RouteFragment) manager.findFragmentById(R.id.fragmentList);
+        fragment.updateView();
     }
 }

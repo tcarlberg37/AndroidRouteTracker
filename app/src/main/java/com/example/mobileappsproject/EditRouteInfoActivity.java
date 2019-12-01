@@ -14,6 +14,9 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.mobileappsproject.Route.RouteContent;
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.List;
 
 public class EditRouteInfoActivity extends FragmentActivity implements MapFragment.OnFragmentInteractionListener {
 
@@ -26,6 +29,12 @@ public class EditRouteInfoActivity extends FragmentActivity implements MapFragme
         // if route was passed in intent set it = route, else null
         final RouteContent.Route route = getIntent().getExtras() == null ? null : (RouteContent.Route)getIntent().getExtras().getSerializable("route");
 
+        List<LatLng> points;
+        Cursor pointsCursor = dbHelper.getPoints(route.id);
+        if (pointsCursor.getCount() > 0) {
+            pointsCursor.moveToNext();
+        }
+
         final TextView txtRouteName = findViewById(R.id.txtRouteName);
         final EditText editRouteName = findViewById(R.id.editRouteName);
         final EditText editTags = findViewById(R.id.editTags);
@@ -37,8 +46,7 @@ public class EditRouteInfoActivity extends FragmentActivity implements MapFragme
             editRouteName.setText(route.route_name);
             editTags.setText(route.tags);
             editDate.setText(route.date);
-            ratingBar.setRating(route.rating);
-        }
+            ratingBar.setRating(route.rating);        }
 
 
         Button btnSave = findViewById(R.id.btnSave);
@@ -53,7 +61,7 @@ public class EditRouteInfoActivity extends FragmentActivity implements MapFragme
                 if (route != null){ // if the route exists already, update
                     dbHelper.updateRoute(old_name, new_name, rating, tags, date);
                 } else { // if route doesn't exist, insert new row
-                    dbHelper.insert(new_name, rating, tags, date);
+                    dbHelper.insertRoute(new_name, rating, tags, date);
                 }
                 // redirect back to the list page once the edits are saved
                 Intent i = new Intent(v.getContext(), RouteListActivity.class);
@@ -68,12 +76,26 @@ public class EditRouteInfoActivity extends FragmentActivity implements MapFragme
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dbHelper.deleteRoute(route.route_name); // 1 if row deleted, 0 if not
+                dbHelper.deleteRoute(route.route_name); // returns 1 if row deleted, 0 if not
+                dbHelper.deletePoints(route.id);
                 Intent i = new Intent(v.getContext(), RouteListActivity.class);
-                // i.putExtra("reload", true);
                 setResult(1);
                 startActivity(i);
                 finish();
+            }
+        });
+
+        Button btnShare = findViewById(R.id.btnShare);
+        btnShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, route.route_name);
+                sendIntent.setType("text/plain");
+
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                startActivity(shareIntent);
             }
         });
     }
