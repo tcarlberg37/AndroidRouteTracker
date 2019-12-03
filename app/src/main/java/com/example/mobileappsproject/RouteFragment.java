@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,6 +109,7 @@ public class RouteFragment extends Fragment {
 
     // recycle view once data has been changed
     public void updateView() {
+        Log.d("fragment updated", "fragment updateView called");
         RecyclerView rv = getActivity().findViewById(R.id.fragmentList);
         rv.getAdapter().notifyDataSetChanged();
     }

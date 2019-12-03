@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -58,7 +59,6 @@ public class RouteListActivity extends FragmentActivity implements RouteFragment
     public void onListFragmentInteraction(RouteContent.Route item) {
         Intent i = new Intent(this, EditRouteInfoActivity.class);
         i.putExtra("route", item);
-        //startActivity(i);
         startActivityForResult(i, 1);
     }
 
@@ -70,12 +70,16 @@ public class RouteListActivity extends FragmentActivity implements RouteFragment
                 FragmentManager manager = getSupportFragmentManager();
                 RouteFragment fragment = (RouteFragment) manager.findFragmentById(R.id.fragmentList);
                 fragment.updateView();
+                Log.d("updated list", "updated list");
+            } else {
+                Log.d("wrong resultCode", "wrong resultCode");
             }
         }
     }
 
     @Override
     protected void onResume() {
+        Log.d("onResume", "onResume called");
         super.onResume();
         FragmentManager manager = getSupportFragmentManager();
         RouteFragment fragment = (RouteFragment) manager.findFragmentById(R.id.fragmentList);

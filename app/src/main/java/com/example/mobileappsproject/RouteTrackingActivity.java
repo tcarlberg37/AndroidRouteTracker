@@ -66,9 +66,9 @@ public class RouteTrackingActivity extends FragmentActivity implements MapFragme
         // route_id that exists in the Routes table and can be referenced as a foreign key in the Points table);
         dbHelper.insertRoute("edit route name", (float) 0.0, "", Calendar.getInstance().getTime().toString());
         Cursor cursor = dbHelper.getID("edit route name");
-        cursor.moveToNext();
+        cursor.moveToFirst();
         // get the Route's id in the db so that we have the foreign key to include when inserting Points
-        final int route_id = cursor.getPosition();
+        final int route_id = cursor.getInt(0);
         // create a Route object to pass to intent
         final RouteContent.Route route = new RouteContent.Route(route_id, "edit route name", (float) 0.0, "", Calendar.getInstance().getTime().toString());
 
@@ -143,8 +143,8 @@ public class RouteTrackingActivity extends FragmentActivity implements MapFragme
                     LatLng startLocation = new LatLng(location.getLatitude(), location.getLongitude());
                     // set the map's starting position to GPS location when you first open the Activity
                     // zoom level goes from 2.0 (out) to 21.0 (in)
-                    gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
                     gMap.addMarker(new MarkerOptions().position(startLocation).title("Starting Location"));
+                    gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
                     Log.d("location task passed", "location task passed");
                 } else {
                     Log.d("location task failed", "location task failed");

@@ -5,8 +5,10 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,11 +16,22 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.mobileappsproject.Route.RouteContent;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class EditRouteInfoActivity extends FragmentActivity implements MapFragment.OnFragmentInteractionListener {
+public class EditRouteInfoActivity extends FragmentActivity implements MapFragment.OnFragmentInteractionListener, OnMapReadyCallback {
+
+    // A list of LatLng points from the database that we will use to create the polyline on the map
+    List<LatLng> pointsList = new ArrayList<LatLng>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +41,22 @@ public class EditRouteInfoActivity extends FragmentActivity implements MapFragme
 
         // if route was passed in intent set it = route, else null
         final RouteContent.Route route = getIntent().getExtras() == null ? null : (RouteContent.Route)getIntent().getExtras().getSerializable("route");
+        Log.d("route info", "ID: " + route.id + " Name: " + route.route_name);
 
-        List<LatLng> points;
+        // load the Google Map
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
         Cursor pointsCursor = dbHelper.getPoints(route.id);
         if (pointsCursor.getCount() > 0) {
-            pointsCursor.moveToNext();
+            while (pointsCursor.moveToNext()) {
+                // Points table column order: id, route_id, timestamp, lat, long
+                Log.d("points: ", pointsCursor.getString(1) + " lat: " + pointsCursor.getDouble(3) + " long: " + pointsCursor.getDouble(4));
+                LatLng latLng = new LatLng(pointsCursor.getDouble(3), pointsCursor.getDouble(4));
+                pointsList.add(latLng);
+            }
+        } else {
+            Log.d("no points", "cursor found no points");
         }
 
         final TextView txtRouteName = findViewById(R.id.txtRouteName);
@@ -58,16 +82,11 @@ public class EditRouteInfoActivity extends FragmentActivity implements MapFragme
                 float rating = ratingBar.getRating();
                 String tags = editTags.getText().toString();
                 String date = editDate.getText().toString();
-                if (route != null){ // if the route exists already, update
-                    dbHelper.updateRoute(old_name, new_name, rating, tags, date);
-                } else { // if route doesn't exist, insert new row
-                    dbHelper.insertRoute(new_name, rating, tags, date);
-                }
+                // route already created in RouteTrackingActivity so we just need to update
+                dbHelper.updateRoute(old_name, new_name, rating, tags, date);
                 // redirect back to the list page once the edits are saved
                 Intent i = new Intent(v.getContext(), RouteListActivity.class);
-                // i.putExtra("reload", true);
-                setResult(1);
-                startActivity(i);
+                setResult(RESULT_OK);
                 finish();
             }
         });
@@ -76,22 +95,22 @@ public class EditRouteInfoActivity extends FragmentActivity implements MapFragme
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dbHelper.deleteRoute(route.route_name); // returns 1 if row deleted, 0 if not
+                dbHelper.deleteRoute(route.route_name);
                 dbHelper.deletePoints(route.id);
                 Intent i = new Intent(v.getContext(), RouteListActivity.class);
-                setResult(1);
-                startActivity(i);
+                setResult(RESULT_OK);
                 finish();
             }
         });
 
-        Button btnShare = findViewById(R.id.btnShare);
+        FloatingActionButton btnShare = findViewById(R.id.btnShare);
         btnShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, route.route_name);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "Route Name: " + route.route_name + " Tags: " + route.tags
+                                    + " Rating: " + route.rating + " Date: " + route.date);
                 sendIntent.setType("text/plain");
 
                 Intent shareIntent = Intent.createChooser(sendIntent, null);
@@ -103,5 +122,13 @@ public class EditRouteInfoActivity extends FragmentActivity implements MapFragme
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        // add the Route Polyline to the map
+        Polyline polyline = googleMap.addPolyline(new PolylineOptions().color(Color.RED));
+        polyline.setPoints(pointsList);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pointsList.get(0), 10));
     }
 }
